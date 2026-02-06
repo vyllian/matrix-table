@@ -1,3 +1,9 @@
 @import "tailwindcss" source(none);
 
 @source "./";
+
+@layer base {
+    body {
+        @apply bg-pink-200;
+    }
+}
