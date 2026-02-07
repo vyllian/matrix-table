@@ -3,7 +3,13 @@
 @source "./";
 
 @layer base {
-    body {
-        @apply bg-pink-200;
+    html, body, #root {
+        @apply h-full;
+    }
+}
+
+@layer components {
+    .cell {
+        @apply p-2 bg-white/40 border-2 border-gray-800 border-collapse text-center;
     }
 }

@@ -33,7 +33,7 @@ export function Input() {
 
     return (
         <div
-            className="relative w-full mt-3 flex items-center justify-evenly"
+            className="relative w-full flex items-center justify-evenly"
         >
             {error && (
                 <div
@@ -71,6 +71,7 @@ export function Input() {
             <button
                 onClick={() => {
                     init(Number(values.m), Number(values.n))
+                    setValues(()=> ({n:"", m:""}))
                 }}
                 className="py-1 px-2 bg-white/30 border border-black/80 rounded-xl cursor-pointer"
             >
