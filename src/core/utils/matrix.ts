@@ -14,3 +14,10 @@ export function generateRow(id: number, columns: number): Cell[] {
     }));
 }
 
+export const getColumnValues = (matrix: Cell[][]) => {
+    const numCols = matrix[0].length;
+
+    return Array.from({ length: numCols }, (_, colIndex) =>
+        matrix.map(row => row[colIndex].amount)
+    );
+};

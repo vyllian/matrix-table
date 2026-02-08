@@ -10,6 +10,10 @@
 
 @layer components {
     .cell {
-        @apply p-2 bg-white/40 border-2 border-gray-800 border-collapse text-center;
+        @apply p-2 bg-white/40 border-t-2 border-l-2 border-gray-800 text-center;
+    }
+
+    .cell-analytic {
+        @apply bg-pink-300;
     }
 }
