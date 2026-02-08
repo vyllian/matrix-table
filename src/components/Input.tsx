@@ -1,5 +1,6 @@
 import {type ChangeEvent, useState} from "react";
 import {useDataContext} from "@/core/contexts/DataContext.tsx";
+import {Button} from "@/components/Button.tsx";
 
 type InputValue = {
     n: number | "";
@@ -68,15 +69,12 @@ export function Input() {
                     className="w-[150px] pl-1"
                 />
             </div>
-            <button
-                onClick={() => {
-                    init(Number(values.m), Number(values.n))
-                    setValues(()=> ({n:"", m:""}))
-                }}
-                className="py-1 px-2 bg-white/30 border border-black/80 rounded-xl cursor-pointer"
-            >
+            <Button onClick={()=>{
+                init(Number(values.m), Number(values.n))
+                setValues(()=> ({n:"", m:""}))
+            }}>
                 Генерувати
-            </button>
+            </Button>
         </div>
     )
 }

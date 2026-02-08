@@ -7,7 +7,7 @@ export function AnalyticCell(
 ) {
     return (
         <td
-            className="sticky right-0 z-10 cell cell-analytic border-r-2 text-xl font-bold"
+            className="sticky right-0 z-10 cell cell-analytic border-r-2 font-bold"
         >
             {value}
         </td>

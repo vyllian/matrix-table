@@ -20,8 +20,9 @@ export const AnalyticRow = memo(function AnalyticRow(
             >
                 60%
             </td>
-            {getColumnValues(matrix).map((column)=>(
+            {getColumnValues(matrix).map((column, index)=>(
                 <td
+                    key={index}
                     className="cell cell-analytic border-b-2"
                 >
                     {percentile(column)}

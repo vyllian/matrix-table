@@ -1,8 +1,8 @@
-import {type ReactNode, useCallback, useMemo, useState} from "react";
+import {type ReactNode, useCallback, useMemo, useRef, useState} from "react";
 import type {Cell} from "@/core/types/Cell.ts";
 import {DataContext} from "../contexts/DataContext";
 import {InteractionContext} from "../contexts/InteractionContext";
-import {generateMatrix} from "@/core/utils/generateMatrix.ts";
+import {generateMatrix, generateRow} from "@/core/utils/matrix.ts";
 
 export function MatrixProvider(
     {
@@ -14,6 +14,8 @@ export function MatrixProvider(
     const [matrix, setMatrix] = useState<Cell[][]>([]);
     const [x, setX] = useState(0);
     const [hoveredCellId, setHoveredCellId] = useState<number | undefined>();
+
+    const nextId = useRef(0);
     
     const findX = useCallback((rows: number, columns: number) => {
         const percent = 0.1;
@@ -22,8 +24,9 @@ export function MatrixProvider(
     
     const init = useCallback((rows: number, columns: number)=>{
         const matrix = generateMatrix(rows, columns);
+        nextId.current = rows * columns;
         findX(rows, columns);
-        setMatrix(()=>matrix);
+        setMatrix(matrix);
     },[findX])
     
     const highlightedIds = (): Set<number> => {
@@ -32,16 +35,18 @@ export function MatrixProvider(
     };
 
     const incrementCell = useCallback((id: number) => {
-        //     TODO:
-
+        setMatrix(prev => prev.map(row =>
+            row.map(cell => cell.id === id ? {...cell, amount: cell.amount + 1} : cell)
+        ));
     }, []);
 
     const addRow = useCallback(() => {
-        //     TODO:
-    }, [])
+        setMatrix((prev)=>[...prev, generateRow(nextId.current, prev[0].length)])
+        nextId.current += matrix[0].length;
+    }, [matrix])
 
     const removeRow = useCallback((rowIndex: number) => {
-        //     TODO:
+        setMatrix(prev => prev.filter((_, i) => i !== rowIndex));
     }, []);
 
     return (
