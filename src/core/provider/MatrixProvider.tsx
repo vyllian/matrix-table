@@ -12,27 +12,45 @@ export function MatrixProvider(
     }
 ) {
     const [matrix, setMatrix] = useState<Cell[][]>([]);
-    const [x, setX] = useState(0);
-    const [hoveredCellId, setHoveredCellId] = useState<number | undefined>();
+    const [hoveredCell, setHoveredCell] = useState<Cell | null>(null);
 
     const nextId = useRef(0);
-    
-    const findX = useCallback((rows: number, columns: number) => {
-        const percent = 0.1;
-        setX(() => Math.ceil(percent * rows * columns));
-    },[])
-    
-    const init = useCallback((rows: number, columns: number)=>{
+
+    const flatMatrix = useMemo(() => {
+        return matrix.flat();
+    }, [matrix]);
+
+    const matrixSize = useMemo(() => {
+        return {
+            rows: matrix.length,
+            columns: matrix[0]?.length ?? 0,
+        };
+    }, [matrix]);
+
+    const x = useMemo(()=> {
+        const percent = 0.05;
+        return Math.ceil(percent * matrixSize.rows * matrixSize.columns)
+    }, [matrixSize])
+
+    const init = useCallback((rows: number, columns: number) => {
         const matrix = generateMatrix(rows, columns);
         nextId.current = rows * columns;
-        findX(rows, columns);
         setMatrix(matrix);
-    },[findX])
-    
-    const highlightedIds = (): Set<number> => {
-        //     TODO:
-        return new Set();
-    };
+    }, [])
+
+    const highlightedCells = useMemo(() => {
+        if (!hoveredCell) return new Set<Cell>();
+
+        return new Set(
+            flatMatrix
+                .filter(cell => cell.id !== hoveredCell.id)
+                .sort((a, b) =>
+                    Math.abs(a.amount - hoveredCell.amount) -
+                    Math.abs(b.amount - hoveredCell.amount)
+                )
+                .slice(0, x)
+        );
+    }, [flatMatrix, hoveredCell, x]);
 
     const incrementCell = useCallback((id: number) => {
         setMatrix(prev => prev.map(row =>
@@ -41,9 +59,9 @@ export function MatrixProvider(
     }, []);
 
     const addRow = useCallback(() => {
-        setMatrix((prev)=>[...prev, generateRow(nextId.current, prev[0].length)])
-        nextId.current += matrix[0].length;
-    }, [matrix])
+        setMatrix((prev) => [...prev, generateRow(nextId.current, matrixSize.columns)])
+        nextId.current += matrixSize.columns;
+    }, [matrixSize])
 
     const removeRow = useCallback((rowIndex: number) => {
         setMatrix(prev => prev.filter((_, i) => i !== rowIndex));
@@ -62,10 +80,9 @@ export function MatrixProvider(
             <InteractionContext.Provider
                 value={useMemo(() => ({
                     x,
-                    hoveredCellId,
-                    highlightedIds,
-                    setHover: setHoveredCellId,
-                }), [x, hoveredCellId, highlightedIds, setHoveredCellId])}
+                    setHoveredCell,
+                    highlightedCells,
+                }), [x, setHoveredCell, highlightedCells])}
             >
                 {children}
             </InteractionContext.Provider>

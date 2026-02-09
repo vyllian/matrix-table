@@ -1,10 +1,10 @@
 import {createContext, useContext} from "react";
+import type {Cell} from "@/core/types/Cell.ts";
 
 export type InteractionValue = {
     x: number;
-    hoveredCellId?: number;
-    highlightedIds?: Set<number>;
-    setHover: (id?: number) => void;
+    setHoveredCell: (cell: Cell | null) => void;
+    highlightedCells: Set<Cell>;
 };
 
 export const InteractionContext = createContext<InteractionValue|null>(null);
