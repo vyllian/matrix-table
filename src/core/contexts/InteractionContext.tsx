@@ -4,7 +4,9 @@ import type {Cell} from "@/core/types/Cell.ts";
 export type InteractionValue = {
     x: number;
     setHoveredCell: (cell: Cell | null) => void;
-    highlightedCells: Set<Cell>;
+    highlightedCells: Set<Cell> | null;
+    highlightedRowIndex: number | null;
+    setHighlightedRowIndex: (index: number | null) => void;
 };
 
 export const InteractionContext = createContext<InteractionValue|null>(null);

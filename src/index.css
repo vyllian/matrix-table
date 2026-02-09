@@ -11,7 +11,7 @@
 
 @layer components {
     .cell {
-        @apply p-2 min-w-16 bg-white/40 border-t-2 border-l-2 border-gray-800 text-center;
+        @apply p-2 min-w-[75px] bg-white/40 border-t-2 border-l-2 border-gray-800 text-center;
     }
 
     .cell-analytic {

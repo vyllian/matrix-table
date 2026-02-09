@@ -5,9 +5,15 @@ import {useInteractionContext} from "@/core/contexts/InteractionContext.tsx";
 
 export const Cell = memo(function Cell(
     {
-        cell
+        cell,
+        showPercentage,
+        percentSuma,
+        percentValue,
     }: {
-        cell: CellType
+        cell: CellType,
+        showPercentage: boolean,
+        percentSuma: number,
+        percentValue: number,
     }
 ) {
     const {incrementCell} = useDataContext();
@@ -17,7 +23,7 @@ export const Cell = memo(function Cell(
         incrementCell(cell.id);
     }
 
-    const isHighlighted = highlightedCells.has(cell);
+    const isHighlighted = highlightedCells?.has(cell);
 
     return (
         <td
@@ -28,11 +34,12 @@ export const Cell = memo(function Cell(
                 if (e.key === "Enter") handleClick();
             }}
             tabIndex={0}
-            className={`cell text-xl cursor-pointer transition-colors duration-75 ${
+            className={`cell cursor-pointer transition-colors duration-75 ${
                 isHighlighted ? "bg-teal-600/80" : "hover:bg-teal-600/50"
             }`}
+            style={{backgroundColor: showPercentage ? `rgba(138, 32, 6, ${percentValue})` : ""}}
         >
-            {cell.amount}
+            {showPercentage ? `${percentSuma}%` : cell.amount}
         </td>
     )
 })

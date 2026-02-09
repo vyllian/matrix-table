@@ -2,10 +2,11 @@ import type {Cell as CellType} from "@/core/types/Cell.ts";
 import {Cell} from "@/components/table/Cell.tsx";
 import {memo} from "react";
 import {AnalyticCell} from "@/components/table/AnalyticCell.tsx";
-import {sum} from "@/core/utils/math.ts";
+import {max, round, sum} from "@/core/utils/math.ts";
 import {useDataContext} from "@/core/contexts/DataContext.tsx";
 import {Button} from "@/components/Button.tsx";
 import binIcon from "@/assets/icons/bin.svg";
+import {useInteractionContext} from "@/core/contexts/InteractionContext.tsx";
 
 export const Row = memo(function Row(
     {
@@ -17,6 +18,12 @@ export const Row = memo(function Row(
     }
 ) {
     const {removeRow} = useDataContext();
+    const {highlightedRowIndex} = useInteractionContext();
+
+    const isHighlighted = highlightedRowIndex === index;
+
+    const suma = sum(row);
+    const biggestValue = max(row).amount;
 
     return (
         <tr className="group">
@@ -33,9 +40,12 @@ export const Row = memo(function Row(
                 <Cell
                     key={cell.id}
                     cell={cell}
+                    showPercentage={isHighlighted}
+                    percentSuma={round(cell.amount/suma*100)}
+                    percentValue={round(cell.amount/biggestValue)}
                 />
             ))}
-            <AnalyticCell value={sum(row)}/>
+            <AnalyticCell value={suma} rowIndex={index}/>
         </tr>
     )
 })

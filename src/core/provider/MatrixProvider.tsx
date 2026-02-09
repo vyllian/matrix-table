@@ -1,7 +1,7 @@
 import {type ReactNode, useCallback, useMemo, useRef, useState} from "react";
 import type {Cell} from "@/core/types/Cell.ts";
-import {DataContext} from "../contexts/DataContext";
-import {InteractionContext} from "../contexts/InteractionContext";
+import {DataContext} from "@/core/contexts/DataContext";
+import {InteractionContext} from "@/core/contexts/InteractionContext";
 import {generateMatrix, generateRow} from "@/core/utils/matrix.ts";
 
 export function MatrixProvider(
@@ -13,6 +13,7 @@ export function MatrixProvider(
 ) {
     const [matrix, setMatrix] = useState<Cell[][]>([]);
     const [hoveredCell, setHoveredCell] = useState<Cell | null>(null);
+    const [highlightedRowIndex, setHighlightedRowIndex] = useState<number | null>(null);
 
     const nextId = useRef(0);
 
@@ -39,8 +40,7 @@ export function MatrixProvider(
     }, [])
 
     const highlightedCells = useMemo(() => {
-        if (!hoveredCell) return new Set<Cell>();
-
+        if (!hoveredCell) return null;
         return new Set(
             flatMatrix
                 .filter(cell => cell.id !== hoveredCell.id)
@@ -82,7 +82,9 @@ export function MatrixProvider(
                     x,
                     setHoveredCell,
                     highlightedCells,
-                }), [x, setHoveredCell, highlightedCells])}
+                    highlightedRowIndex,
+                    setHighlightedRowIndex,
+                }), [x, setHoveredCell, highlightedCells, highlightedRowIndex, setHighlightedRowIndex])}
             >
                 {children}
             </InteractionContext.Provider>

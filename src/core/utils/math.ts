@@ -6,8 +6,15 @@ export const generateAmount = ()=> {
     return Math.floor(Math.random() * (max - min) + min);
 }
 
-export const sum = (row: Cell[]) =>
+export const sum = (row: Cell[]): number =>
     row.reduce((s, c) => s + c.amount, 0);
+
+export const max = (row: Cell[]): Cell => {
+    return row.reduce((maxCell, currentCell) =>
+            currentCell.amount > maxCell.amount ? currentCell : maxCell, row[0]);
+};
+
+export const round = (value: number)=> Number(value.toFixed(2));
 
 export const percentile = (column: number[], percent = 0.6):number => {
     const sorted = column.toSorted((a, b) => a - b);
@@ -23,6 +30,6 @@ export const percentile = (column: number[], percent = 0.6):number => {
         const rf = r - ri;
 
         const percentile = sorted[ri] + rf * (sorted[ri+1] - sorted[ri]);
-        return Number(percentile.toFixed(2));
+        return round(percentile);
     }
 };
