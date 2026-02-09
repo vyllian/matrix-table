@@ -12,7 +12,7 @@ export function MatrixProvider(
     }
 ) {
     const [matrix, setMatrix] = useState<Cell[][]>([]);
-    const [hoveredCell, setHoveredCell] = useState<Cell | null>(null);
+    const [hoveredCellId, setHoveredCellId] = useState<number>(-1);
     const [highlightedRowIndex, setHighlightedRowIndex] = useState<number | null>(null);
 
     const nextId = useRef(0);
@@ -33,6 +33,10 @@ export function MatrixProvider(
         return Math.ceil(percent * matrixSize.rows * matrixSize.columns)
     }, [matrixSize])
 
+    const currentHoveredCell = useMemo(() => {
+        return flatMatrix.find(c => c.id === hoveredCellId) || null;
+    }, [flatMatrix, hoveredCellId]);
+
     const init = useCallback((rows: number, columns: number) => {
         const matrix = generateMatrix(rows, columns);
         nextId.current = rows * columns;
@@ -40,17 +44,17 @@ export function MatrixProvider(
     }, [])
 
     const highlightedCells = useMemo(() => {
-        if (!hoveredCell) return null;
+        if (!currentHoveredCell) return null;
         return new Set(
             flatMatrix
-                .filter(cell => cell.id !== hoveredCell.id)
+                .filter(cell => cell.id !== currentHoveredCell.id)
                 .sort((a, b) =>
-                    Math.abs(a.amount - hoveredCell.amount) -
-                    Math.abs(b.amount - hoveredCell.amount)
+                    Math.abs(a.amount - currentHoveredCell.amount) -
+                    Math.abs(b.amount - currentHoveredCell.amount)
                 )
                 .slice(0, x)
         );
-    }, [flatMatrix, hoveredCell, x]);
+    }, [flatMatrix, currentHoveredCell, x]);
 
     const incrementCell = useCallback((id: number) => {
         setMatrix(prev => prev.map(row =>
@@ -80,11 +84,11 @@ export function MatrixProvider(
             <InteractionContext.Provider
                 value={useMemo(() => ({
                     x,
-                    setHoveredCell,
+                    setHoveredCellId,
                     highlightedCells,
                     highlightedRowIndex,
                     setHighlightedRowIndex,
-                }), [x, setHoveredCell, highlightedCells, highlightedRowIndex, setHighlightedRowIndex])}
+                }), [x, setHoveredCellId, highlightedCells, highlightedRowIndex, setHighlightedRowIndex])}
             >
                 {children}
             </InteractionContext.Provider>

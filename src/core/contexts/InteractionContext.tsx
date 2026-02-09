@@ -3,7 +3,7 @@ import type {Cell} from "@/core/types/Cell.ts";
 
 export type InteractionValue = {
     x: number;
-    setHoveredCell: (cell: Cell | null) => void;
+    setHoveredCellId: (id: number) => void;
     highlightedCells: Set<Cell> | null;
     highlightedRowIndex: number | null;
     setHighlightedRowIndex: (index: number | null) => void;

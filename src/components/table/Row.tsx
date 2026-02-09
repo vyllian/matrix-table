@@ -27,7 +27,7 @@ export const Row = memo(function Row(
 
     return (
         <tr className="group">
-            <td className="border-2 border-transparent">
+            <td className="bg-pink-200 border-2 border-transparent sticky left-0 z-10">
                 <div
                     className="group-hover:opacity-100 focus-within:opacity-100 opacity-0 flex items-center justify-center transition-opacity duration-300 ease-in-out"
                 >

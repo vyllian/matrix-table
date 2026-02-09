@@ -17,7 +17,7 @@ export const Cell = memo(function Cell(
     }
 ) {
     const {incrementCell} = useDataContext();
-    const {setHoveredCell, highlightedCells} = useInteractionContext();
+    const {setHoveredCellId, highlightedCells} = useInteractionContext();
 
     const handleClick = () => {
         incrementCell(cell.id);
@@ -28,15 +28,16 @@ export const Cell = memo(function Cell(
     return (
         <td
             onClick={handleClick}
-            onMouseEnter={() => setHoveredCell(cell)}
-            onMouseLeave={() => setHoveredCell(null)}
+            onMouseEnter={() => setHoveredCellId(cell.id)}
+            onMouseLeave={() => setHoveredCellId(-1)}
             onKeyDown={(e) => {
                 if (e.key === "Enter") handleClick();
             }}
             tabIndex={0}
-            className={`cell cursor-pointer transition-colors duration-75 ${
-                isHighlighted ? "bg-teal-600/80" : "hover:bg-teal-600/50"
-            }`}
+            className={`cell cursor-pointer transition-colors duration-75 
+                ${isHighlighted ? "bg-teal-600/80" : "hover:bg-teal-600/50"}
+                ${showPercentage ? "font-bold" : ""}
+            `}
             style={{backgroundColor: showPercentage ? `rgba(138, 32, 6, ${percentValue})` : ""}}
         >
             {showPercentage ? `${percentSuma}%` : cell.amount}
