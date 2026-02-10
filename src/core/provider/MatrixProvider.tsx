@@ -12,6 +12,7 @@ export function MatrixProvider(
     }
 ) {
     const [matrix, setMatrix] = useState<Cell[][]>([]);
+    const [x, setX] = useState(0);
     const [hoveredCellId, setHoveredCellId] = useState<number>(-1);
     const [highlightedRowIndex, setHighlightedRowIndex] = useState<number | null>(null);
 
@@ -28,11 +29,6 @@ export function MatrixProvider(
         };
     }, [matrix]);
 
-    const x = useMemo(()=> {
-        const percent = 0.05;
-        return Math.ceil(percent * matrixSize.rows * matrixSize.columns)
-    }, [matrixSize])
-
     const currentHoveredCell = useMemo(() => {
         return flatMatrix.find(c => c.id === hoveredCellId) || null;
     }, [flatMatrix, hoveredCellId]);
@@ -41,6 +37,7 @@ export function MatrixProvider(
         const matrix = generateMatrix(rows, columns);
         nextId.current = rows * columns;
         setMatrix(matrix);
+        setX(0);
     }, [])
 
     const highlightedCells = useMemo(() => {
@@ -69,17 +66,28 @@ export function MatrixProvider(
 
     const removeRow = useCallback((rowIndex: number) => {
         setMatrix(prev => prev.filter((_, i) => i !== rowIndex));
-    }, []);
+        setMatrix(prev => {
+            const newMatrix = prev.filter((_, i) => i !== rowIndex);
+            const newTotalCells = newMatrix.length * (newMatrix[0]?.length ?? 0);
+            if (x >= newTotalCells) {
+                setX(0);
+            }
+            return newMatrix;
+        });
+    }, [x]);
 
     return (
         <DataContext.Provider
             value={useMemo(() => ({
                 matrix,
+                matrixSize,
                 init,
+                x,
+                setX,
                 incrementCell,
                 removeRow,
                 addRow,
-            }), [matrix, init, incrementCell, removeRow, addRow])}
+            }), [matrix,matrixSize, init, x, setX, incrementCell, removeRow, addRow])}
         >
             <InteractionContext.Provider
                 value={useMemo(() => ({

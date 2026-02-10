@@ -21,7 +21,7 @@ export function Table() {
             className="flex flex-col justify-start gap-4"
         >
             <div
-                className="relative w-full max-w-[90vw] h-full max-h-[80vh] overflow-auto"
+                className="relative w-full max-w-[90vw] h-full max-h-[74vh] overflow-auto"
             >
                 <table
                     className="table-fixed min-w-max mx-auto border-separate border-spacing-0"
